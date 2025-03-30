@@ -1,7 +1,7 @@
 package com.backend.productservice.Service;
 import com.backend.productservice.DTO.ProductDto;
 import com.backend.productservice.Model.Product;
-import com.backend.productservice.Repository.ProductRepo;
+import com.backend.productservice.Repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
@@ -12,19 +12,24 @@ import java.util.Optional;
 @Service
 public class ProductService {
     @Autowired
-    private static ProductRepo productRepo;
+    private  final ProductRepository productRepo;
+
+    public ProductService(ProductRepository productRepo) {
+        this.productRepo = productRepo;
+    }
 
     //CREATE ADD PRODUCT FEATURE CODE.
-    public static Product create(ProductDto product) {
-        Product NewProduct = Product.builder()
-                .setProduct_description(product.getProduct_description())
-                .setProduct_price(product.getProduct_price())
-                .setProduct_image(product.getProduct_image())
-                .setProduct_name(product.getProduct_name())
-                .setProduct_sku(product.getProduct_sku())
-                .setProduct_quantity(product.getProduct_quantity())
+    public Product create(ProductDto productDto) {
+        Product newProduct = Product.builder()
+                .setProduct_name(productDto.getProduct_name())
+                .setProduct_price(productDto.getProduct_price())
+                .setProduct_description(productDto.getProduct_description())
+                .setProduct_image(productDto.getProduct_image())  // Now accepts String
+                .setProduct_quantity(productDto.getProduct_quantity())
+                .setProduct_sku(productDto.getProduct_sku())
                 .build();
-        return productRepo.save(NewProduct);
+
+        return productRepo.save(newProduct);
     }
 
     // GET ALL PRODUCT FEATURE CODE.
@@ -43,7 +48,7 @@ public class ProductService {
         productDto.setProduct_price(product.getProduct_price());
         productDto.setProduct_image(product.getProduct_image());
         productDto.setProduct_price(product.getProduct_price());
-        productDto.getProduct_sku(product.getProduct_sku());
+        productDto.setProduct_sku(product.getProduct_sku());
         return productDto;
     }
 
@@ -68,21 +73,21 @@ public class ProductService {
         product.setProduct_price(productDto.getProduct_price());
         product.setProduct_image(productDto.getProduct_image());
         product.setProduct_quantity(productDto.getProduct_quantity());
-        product.setProduct_sku(productDto.getProduct_sku(product.getProduct_sku()));
+        product.setProduct_sku(productDto.getProduct_sku());
         productRepo.save(product);
         return productDto;
     }
     //TO FIND BY NAME.
-    public List<ProductDto> getByName(String productName)
+    public List<ProductDto> getByName(String product_name)
     {
-        List<Product> product = Collections.singletonList(productRepo.findByName(productName));
+        List<Product> product = Collections.singletonList(productRepo.findByproduct_name(product_name));
         return product.stream().map(this::mapTOList).toList();
     }
 
     //TO FIND BY SKU_CODE.
-        public List<ProductDto> getBySku(String sku_code)
-        {
-            List<Product> productSku = productRepo.findBySkuCode(sku_code);
-            return productSku.stream().map(this::mapTOList).toList();
-        }
+    public List<ProductDto> getBySku(String product_sku)
+    {
+        List<Product> productSku = productRepo.findByproduct_sku(product_sku);
+        return productSku.stream().map(this::mapTOList).toList();
+    }
 }

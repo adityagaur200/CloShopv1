@@ -5,68 +5,81 @@ import com.backend.productservice.Model.Product;
 import com.backend.productservice.Service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RequestMapping
+@RequestMapping("/product")
 @RestController
 @CrossOrigin
-public class ProductController
-{
+public class ProductController {
+
     @Autowired
-    private ProductService ProductService;
+    private ProductService productService;  // ✅ Use camelCase for naming convention
 
-    //CREATING PRODUCT API
+    // ✅ CREATE PRODUCT API
     @PostMapping("/create")
-    public Product createProduct(@RequestBody ProductDto product)
-    {
-        return ProductService.create(product);
+    public ResponseEntity<Product> createProduct(@Validated @RequestBody ProductDto product) {
+        Product createdProduct = productService.create(product);
+        return ResponseEntity.ok(createdProduct);
     }
 
-    //GET ALL PRODUCTS API
-    @RequestMapping("/get")
-    public List<Product> getProduct()
-    {
-       Product pro = (Product) ProductService.getAll();
-       return List.of(pro);
-    }
+    // ✅ GET ALL PRODUCTS API
+    @GetMapping("/get")
+    public ResponseEntity<List<ProductDto>> getAllProducts() {
+        List<ProductDto> products = productService.getAll();
 
-    //GET PRODUCT BY NAME.
-    @GetMapping("/search/{id}")
-    public ResponseEntity<List<ProductDto>> getBySearch(@PathVariable int id) {
-        List<ProductDto> productDto = ProductService.getbyId(id);
-        if (productDto == null) {
-            return ResponseEntity.notFound().build(); // Return 404 if product not found
+        if (products.isEmpty()) {
+            return ResponseEntity.noContent().build();  // Return 204 if no products
         }
-        return ResponseEntity.ok(productDto); // Return 200 OK with the product
+        return ResponseEntity.ok(products);  // Return 200 with the list
     }
-    // Update Product
+
+    // ✅ GET PRODUCT BY ID
+    @GetMapping("/search/id/{id}")
+    public ResponseEntity<List<ProductDto>> getById(@PathVariable int id) {
+        List<ProductDto> productDto = productService.getbyId(id);
+
+        if (productDto.isEmpty()) {
+            return ResponseEntity.notFound().build();  // Return 404 if not found
+        }
+        return ResponseEntity.ok(productDto);
+    }
+
+    // ✅ UPDATE PRODUCT
     @PutMapping("/update/{id}")
     public ResponseEntity<ProductDto> updateProduct(@PathVariable int id, @RequestBody ProductDto productDto) {
-        ProductDto updatedProduct = ProductService.updateProduct(id, productDto);
+        ProductDto updatedProduct = productService.updateProduct(id, productDto);
 
         if (updatedProduct == null) {
-            // Product not found, return 404
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.notFound().build();  // Return 404 if not found
         }
 
-        // Return the updated product with status 200 OK
-        return ResponseEntity.ok(updatedProduct);
+        return ResponseEntity.ok(updatedProduct);  // Return 200 OK
     }
 
-    //GET PRODUCT BY NAME.
-    @GetMapping("/search/{product_name}")
-    public ResponseEntity<List<ProductDto>> getByProductId(@PathVariable String product_name) {
-        List<ProductDto> productDto = ProductService.getByName(product_name);
+    // ✅ GET PRODUCT BY NAME
+    @GetMapping("/search/name/{product_name}")
+    public ResponseEntity<List<ProductDto>> getByProductName(@PathVariable String product_name) {
+        List<ProductDto> productDto = productService.getByName(product_name);
+
+        if (productDto.isEmpty()) {
+            return ResponseEntity.notFound().build();  // Return 404 if no products found
+        }
+
         return ResponseEntity.ok(productDto);
     }
 
-    //GET PRODUCT BY SKU_CODE.
-    @GetMapping("/search/{sku_code}")
-    public ResponseEntity<List<ProductDto>> getBySkuCode(@PathVariable String sku_code) {
-        List<ProductDto> productDto = ProductService.getBySku(sku_code);
+    // ✅ GET PRODUCT BY SKU_CODE
+    @GetMapping("/search/sku/{product_sku}")
+    public ResponseEntity<List<ProductDto>> getBySkuCode(@PathVariable String product_sku) {
+        List<ProductDto> productDto = productService.getBySku(product_sku);
+
+        if (productDto.isEmpty()) {
+            return ResponseEntity.notFound().build();  // Return 404 if no products found
+        }
+
         return ResponseEntity.ok(productDto);
     }
-
 }

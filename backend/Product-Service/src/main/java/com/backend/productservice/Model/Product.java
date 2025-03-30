@@ -14,11 +14,11 @@ import java.util.List;
 @Setter
 public class Product {
     @Id
-    private int product_id;
+    private String product_id;
     private String product_name;
     private int product_price;
     private String product_description;
-    private List<Byte> product_image;
+    private String product_image;
     private int product_quantity;
     private String product_sku;
 
@@ -27,9 +27,9 @@ public class Product {
             this.product_name = productBuilder.product_name;
             this.product_price = productBuilder.product_price;
             this.product_description = productBuilder.product_description;
-            this.product_image = productBuilder.product_image;
             this.product_quantity = productBuilder.product_quantity;
             this.product_sku = productBuilder.product_sku;
+            this.product_image = productBuilder.product_image;
     }
     public Product()
     {
@@ -48,10 +48,10 @@ public class Product {
     public void setProduct_description(String product_description) {
         this.product_description = product_description;
     }
-    public List<Byte> getProduct_image() {
+    public String getProduct_image() {
         return product_image;
     }
-    public void setProduct_image(List<Byte> product_image) {
+    public void setProduct_image(String product_image) {
         this.product_image = product_image;
     }
     public String getProduct_name() {
@@ -60,10 +60,10 @@ public class Product {
     public void setProduct_name(String product_name) {
         this.product_name = product_name;
     }
-    public int getProduct_id() {
+    public String getProduct_id() {
         return product_id;
     }
-    public void setProduct_id(int product_id) {
+    public void setProduct_id(String product_id) {
         this.product_id = product_id;
     }
     public int getProduct_quantity() {
@@ -79,53 +79,66 @@ public class Product {
         this.product_sku = product_sku;
     }
 
+    public String getId() {
+            return null;
+    }
+
     public static class ProductBuilder
     {
-        private int product_id;
+        private String product_id;
         private String product_name;
         private int product_price;
         private String product_description;
-        private List<Byte> product_image;
+        private String product_image;
         private int product_quantity;
         private String product_sku;
-        public ProductBuilder setProduct_id(int product_id) {
+
+        // ✅ Setters with proper naming
+        public ProductBuilder setProduct_id(String product_id) {
             this.product_id = product_id;
             return this;
         }
+
         public ProductBuilder setProduct_name(String product_name) {
             this.product_name = product_name;
             return this;
         }
+
         public ProductBuilder setProduct_price(int product_price) {
             this.product_price = product_price;
             return this;
         }
+
         public ProductBuilder setProduct_description(String product_description) {
             this.product_description = product_description;
             return this;
         }
-        public ProductBuilder setProduct_image(List<Byte> product_image) {
+
+        public ProductBuilder setProduct_image(String product_image) {
             this.product_image = product_image;
             return this;
         }
+
         public ProductBuilder setProduct_quantity(int product_quantity) {
             this.product_quantity = product_quantity;
             return this;
         }
+
         public ProductBuilder setProduct_sku(String product_sku) {
             this.product_sku = product_sku;
             return this;
         }
-        public ProductBuilder getProduct_sku(String product_sku) {
-            this.product_sku = product_sku;
-            return this;
-        }
+
+        // ✅ Remove redundant `getProduct_sku` method
         public Product build() {
             return new Product(this);
         }
     }
+
+    // ✅ Builder method
     public static ProductBuilder builder() {
         return new ProductBuilder();
     }
+
 
 }

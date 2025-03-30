@@ -1,5 +1,6 @@
 package com.backend.productservice.DTO;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 import java.util.List;
@@ -12,11 +13,19 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 public class ProductDto {
+    @JsonProperty("product_id")
+    private int product_id;
+    @JsonProperty("product_name")
     private String product_name;
+    @JsonProperty("product_price")
     private int product_price;
+    @JsonProperty("product_description")
     private String product_description;
-    private List<Byte> product_image;
+    @JsonProperty("product_image")
+    private String product_image;
+    @JsonProperty("product_quantity")
     private int product_quantity;
+    @JsonProperty("product_sku")
     private String product_sku;
 
 
@@ -32,10 +41,10 @@ public class ProductDto {
     public void setProduct_description(String product_description) {
         this.product_description = product_description;
     }
-    public List<Byte> getProduct_image() {
+    public String getProduct_image() {
         return product_image;
     }
-    public void setProduct_image(List<Byte> product_image) {
+    public void setProduct_image(String product_image) {
         this.product_image = product_image;
     }
     public String getProduct_name() {
@@ -50,9 +59,10 @@ public class ProductDto {
     public void setProduct_quantity(int product_quantity) {
         this.product_quantity = product_quantity;
     }
-    public String getProduct_sku(String productSku) {
+    public String getProduct_sku() {
         return product_sku;
     }
+
     public void setProduct_sku(String product_sku) {
         this.product_sku = product_sku;
     }
